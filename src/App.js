@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useSpring, animated } from "react-spring";
+import "./App.css";
+import DefaultLayout from "./components/Layouts/DefaultLayout";
+import { publicRoutes } from "./routes";
 function App() {
+  const styles = useSpring({
+    to: { opacity: 1 },
+    from: { opacity: 0 },
+    config: { duration: 1000 },
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <animated.div style={styles} className="App">
+        <Routes>
+          {publicRoutes.map((route, index) => {
+            const Page = route.component;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <DefaultLayout>
+                    <Page />
+                  </DefaultLayout>
+                }
+              />
+            );
+          })}
+        </Routes>
+      </animated.div>
+    </BrowserRouter>
   );
 }
 
